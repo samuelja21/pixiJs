@@ -1,0 +1,37 @@
+<!doctype html>
+<html>
+  <head>
+    <script src="https://pixijs.download/release/pixi.js"></script>
+  </head>
+  <body>
+    <script type="module">
+        const app = new PIXI.Application();
+        await app.init({ width: 640, height: 360 });
+        document.body.appendChild(app.canvas);
+        await PIXI.Assets.load('sample.png');
+        let sprite = PIXI.Sprite.from('sample.png');
+        app.stage.eventMode = 'static';
+        app.stage.hitArea = app.screen;
+        sprite.width = sprite.width/2
+        sprite.height = sprite.height/2
+        app.stage.addEventListener('mousemove', (e) =>
+        {
+            sprite.position.copyFrom(e.global);
+            sprite.x -= sprite.width/2;
+            sprite.y -= sprite.height/2;
+        });
+        sprite.on('mousedown', (event) => { 
+          let circle = new PIXI.Graphics()
+            .circle(sprite.x + sprite.width/2, sprite.y+20, 10)
+            .fill('red');
+          app.stage.addChild(circle);
+          setTimeout(() => {
+            app.stage.removeChild(circle);
+            circle.destroy();
+          }, 2000);
+        });
+        sprite.eventMode = 'static';
+        app.stage.addChild(sprite);
+    </script>
+  </body>
+</html>

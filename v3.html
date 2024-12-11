@@ -1,0 +1,113 @@
+<!doctype html>
+<html>
+  <head>
+    <script src="https://pixijs.download/release/pixi.js"></script>
+  </head>
+  <body>
+    <script type="module">
+
+        function handleKeyPress(key) {
+          switch (key) {
+              case "ArrowUp":
+                  sprite.y -= 10;
+                  break;
+              case "ArrowDown":
+                  sprite.y += 10;
+                  break;
+              case "ArrowLeft":
+                  sprite.x -= 10
+                  break;
+              case "ArrowRight":
+                  sprite.x += 10
+                  break;
+            }
+        }
+
+        const app = new PIXI.Application();
+        await app.init({ background: '#1099bb', resizeTo: window });
+        document.body.appendChild(app.canvas);
+
+        let frame = new PIXI.Graphics({
+          resizeTo: window
+        })
+
+        app.stage.addChild(frame);
+
+        const basicText = new PIXI.Text({ text: 'Numero de "pointerdown": 0' });
+        basicText.x = 50;
+        basicText.y = 100;
+        frame.addChild(basicText);
+
+        // Create gradient fill
+        const fill = new PIXI.FillGradient(0, 0, 0, 36 * 1.7 * 7);
+        const colors = [0xffffff, 0x00ff99].map((color) => PIXI.Color.shared.setValue(color).toNumber());
+        colors.forEach((number, index) =>
+        {
+            const ratio = index / colors.length;
+
+            fill.addColorStop(ratio, number);
+        });
+        const style = new PIXI.TextStyle({
+            fontFamily: 'Arial',
+            fontSize: 36,
+            fontStyle: 'italic',
+            fontWeight: 'bold',
+            fill: { fill },
+            stroke: { color: '#4a1850', width: 5, join: 'round' },
+            dropShadow: {
+                color: '#000000',
+                blur: 4,
+                angle: Math.PI / 6,
+                distance: 6,
+            },
+            wordWrap: true,
+            wordWrapWidth: 440,
+        });
+        const richText = new PIXI.Text({
+            text: 'Numero de "click": 0',
+            style,
+        });
+        richText.x = 50;
+        richText.y = 220;
+        frame.addChild(richText);
+
+        const skewStyle = new PIXI.TextStyle({
+            fontFamily: 'Arial',
+            dropShadow: {
+                alpha: 0.8,
+                angle: 2.1,
+                blur: 4,
+                color: '0x111111',
+                distance: 10,
+            },
+            fill: '#ffffff',
+            stroke: { color: '#004620', width: 12, join: 'round' },
+            fontSize: 60,
+            fontWeight: 'lighter',
+        });
+        const skewText = new PIXI.Text({
+            text: 'Numero de "rightdown": 0',
+            style: skewStyle,
+        });
+        skewText.skew.set(0.65, -0.3);
+        skewText.anchor.set(0.5, 0.5);
+        skewText.x = 350;
+        skewText.y = 480;
+        frame.addChild(skewText);
+
+        let pointerdowns = 0; let clicks = 0; let rightdowns = 0
+        app.stage.eventMode = 'static';
+        app.stage.hitArea = app.screen;
+        app.stage.on('pointerdown', (event) => { pointerdowns += 1; basicText.text = 'Numero de "pointerdown": ' + pointerdowns});
+        app.stage.on('click', (event) => { clicks += 1; richText.text = 'Numero de "click": ' + clicks});
+        app.stage.on('rightdown', (event) => { rightdowns += 1; skewText.text = 'Numero de "rightdown": ' + rightdowns});
+
+        let obj = new PIXI.Graphics()
+          .rect(800, 200, 200, 100)
+          .fill(0xff0000);
+        app.stage.addChild(obj);
+        obj.eventMode = 'static'
+        obj.on('click', (event) => {frame.alpha = 0.5}) 
+    </script>
+  </body>
+</html>
