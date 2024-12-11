@@ -255,7 +255,7 @@ function bulletCollision(x,y){
 }
 
 function shieldCollision(x,y){
-    var colission = false;
+    var collision = false;
     for (var i=0; i <4 && !colission; ++i){
         if (x >= i*110 + i*60 + 125+8 && x<= i*110 + i*60 + 125 + 96) {
             if (y >= 474 && y <= 474+64 && shields[i] < 10) {
@@ -269,7 +269,7 @@ function shieldCollision(x,y){
             }
         }
     }
-    return colission
+    return collision
 }
 
 function setShields(){
@@ -280,7 +280,6 @@ function setShields(){
         anim.y = 450;
         app.stage.addChild(anim);
         shieldSprites[i] = anim;
-        //anim.play()
     }
 
 }
@@ -380,11 +379,9 @@ function martiansMovement(){
 
 async function bullet(obj) {
     var kills = false;
-    var elapsed = 0.0;
     const updateBullet = (delta) => {
         kills = bulletCollision(obj.x, obj.y)
         if (obj.y > 0 && !kills && !shieldCollision(obj.x, obj.y)) {
-            elapsed += delta; 
             obj.y -= 5;
         } else {
             if (!kills) hitsInaRow = 0;
